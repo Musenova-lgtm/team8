@@ -34,7 +34,6 @@ func menu() {
 	case "4":
 		fmt.Println("Вывод всех задач")
 	case "5":
-		// Выходим из функции menu(), что приведет к завершению main()
 		return
 	default:
 		fmt.Println("Неверный ввод. Введите число от 1 до 5.")
