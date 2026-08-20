@@ -17,26 +17,28 @@ func menu() {
 		fmt.Println("3. Удалить таску")
 		fmt.Println("4. Все таски")
 		fmt.Println("5. Завершить работу программы")
-		fmt.Println("Выберите действие (1-5): ")
+		fmt.Println("Выберите действие (1-5):")
+
 		if !scanner.Scan() {
 			break
 		}
-	}
-	choice := strings.TrimSpace(scanner.Text())
 
-	switch choice {
-	case "1":
-		fmt.Println("Создание задач")
-	case "2":
-		fmt.Println("Выполнение задачи")
-	case "3":
-		fmt.Println("Удаление задачи")
-	case "4":
-		fmt.Println("Вывод всех задач")
-	case "5":
-		return
-	default:
-		fmt.Println("Неверный ввод. Введите число от 1 до 5.")
+		choice := strings.TrimSpace(scanner.Text())
+
+		switch choice {
+		case "1":
+			fmt.Println("Создание задач")
+		case "2":
+			fmt.Println("Выполнение задачи")
+		case "3":
+			fmt.Println("Удаление задачи")
+		case "4":
+			fmt.Println("Вывод всех задач")
+		case "5":
+			return
+		default:
+			fmt.Println("Неверный ввод. Введите число от 1 до 5.")
+		}
 	}
 }
 
