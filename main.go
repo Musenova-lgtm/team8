@@ -17,12 +17,12 @@ type Task struct {
 var tasks []Task
 
 func main() {
+	// Начальные данные для демонстрации
 	tasks = []Task{
 		{1, "Setup project", "todo"},
 		{2, "Write code", "inprogress"},
 		{3, "Review", "done"},
 	}
-
 	menu()
 }
 
@@ -34,46 +34,85 @@ func menu() {
 func runMenu(scanner *bufio.Scanner) {
 	for {
 		printMenu()
-
-		scanner.Scan()
+		if !scanner.Scan() {
+			break
+		}
 		choice := strings.TrimSpace(scanner.Text())
 
 		switch choice {
-
 		case "1":
-			fmt.Print("Title: ")
-			scanner.Scan()
+			fmt.Print("Введите название задачи: ")
+			if !scanner.Scan() {
+				continue
+			}
+			title := strings.TrimSpace(scanner.Text())
+
+			// Валидация: название не должно быть пустым
+			if title == "" {
+				fmt.Println("Ошибка: Название задачи не может быть пустым!")
+				continue
+			}
 
 			id := len(tasks) + 1
-			tasks = append(tasks, Task{id, scanner.Text(), "todo"})
-
-			fmt.Println("Task created.")
+			tasks = append(tasks, Task{id, title, "todo"})
+			fmt.Println("Задача успешно создана.")
 
 		case "2":
-			fmt.Print("Enter ID: ")
-			scanner.Scan()
+			fmt.Print("Введите ID задачи для отметки: ")
+			if !scanner.Scan() {
+				continue
+			}
+			input := strings.TrimSpace(scanner.Text())
 
-			id, _ := strconv.Atoi(scanner.Text())
+			// Валидация: перевод строки в число
+			id, err := strconv.Atoi(input)
+			if err != nil {
+				fmt.Println("Ошибка: ID должен быть числом!")
+				continue
+			}
 
+			found := false
 			for i := range tasks {
 				if tasks[i].ID == id {
 					tasks[i].Status = "done"
-					fmt.Println("Marked done.")
+					fmt.Println("Задача отмечена как выполненная.")
+					found = true
+					break
 				}
 			}
 
+			// Валидация: проверка, найден ли ID в списке
+			if !found {
+				fmt.Printf("Ошибка: Задача с ID %d не найдена.\n", id)
+			}
+
 		case "3":
-			fmt.Print("Enter ID: ")
-			scanner.Scan()
+			fmt.Print("Введите ID задачи для удаления: ")
+			if !scanner.Scan() {
+				continue
+			}
+			input := strings.TrimSpace(scanner.Text())
 
-			id, _ := strconv.Atoi(scanner.Text())
+			// Валидация: перевод строки в число
+			id, err := strconv.Atoi(input)
+			if err != nil {
+				fmt.Println("Ошибка: ID должен быть числом!")
+				continue
+			}
 
+			found := false
 			for i := range tasks {
 				if tasks[i].ID == id {
 					tasks = append(tasks[:i], tasks[i+1:]...)
-					fmt.Println("Deleted.")
+					fmt.Println("Задача успешно удалена.")
+					found = true
 					break
 				}
+			}
+
+			// Валидация: проверка, найден ли ID в списке
+			if !found {
+				fmt.Printf("Ошибка: Задача с ID %d не найдена.\n", id)
 			}
 
 		case "4":
@@ -84,13 +123,13 @@ func runMenu(scanner *bufio.Scanner) {
 			return
 
 		default:
-			fmt.Println("Введите число от 1 до 5.")
+			fmt.Println("Неверный ввод. Введите число от 1 до 5.")
 		}
 	}
 }
 
 func printMenu() {
-	fmt.Println("== МЕНЮ ЗАДАЧ ==")
+	fmt.Println("\n== МЕНЮ ЗАДАЧ ==")
 	fmt.Println("1. Создать таску")
 	fmt.Println("2. Пометить выполненным")
 	fmt.Println("3. Удалить таску")
@@ -99,63 +138,36 @@ func printMenu() {
 	fmt.Print("Выберите действие: ")
 }
 
-func printTasks(tasks []Task) {
-	fmt.Println("+----+----------------------+-------------+")
+func printTasks(tasksList []Task) {
+	if len(tasksList) == 0 {
+		fmt.Println("\nСписок задач пуст.")
+		return
+	}
+
+	fmt.Println("\n+----+----------------------+-------------+")
 	fmt.Println("| ID | Title                | Status      |")
 	fmt.Println("+----+----------------------+-------------+")
 
-	for _, task := range tasks {
-		fmt.Printf("| %2d | %-20s | %-11s |\n",
-			task.ID, task.Title, task.Status)
-	}
+	for _, task := range tasksList {
+		// Преобразуем в срез рун для корректной работы с русскими буквами
+		runes := []rune(task.Title)
+		displayTitle := task.Title
 
+		// Ограничиваем длину заголовка до 20 видимых символов
+		if len(runes) > 20 {
+			displayTitle = string(runes[:17]) + "..."
+			runes = []rune(displayTitle)
+		}
+
+		// Вычисляем, сколько пробелов нужно добавить для выравнивания (всего 20 мест)
+		spacesCount := 20 - len(runes)
+		spaces := ""
+		if spacesCount > 0 {
+			spaces = strings.Repeat(" ", spacesCount)
+		}
+
+		// Форматируем статус (он на английском, тут стандартные 11 мест)
+		fmt.Printf("| %2d | %s%s | %-11s |\n", task.ID, displayTitle, spaces, task.Status)
+	}
 	fmt.Println("+----+----------------------+-------------+")
-}
-
-package main
-
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"strings"
-)
-
-func menu() {
-	scanner := bufio.NewScanner(os.Stdin)
-
-	for {
-		fmt.Println("=== МЕНЮ ЗАДАЧ ===")
-		fmt.Println("1. Создать таску")
-		fmt.Println("2. Пометить выполненным")
-		fmt.Println("3. Удалить таску")
-		fmt.Println("4. Все таски")
-		fmt.Println("5. Завершить работу программы")
-		fmt.Println("Выберите действие (1-5):")
-
-		if !scanner.Scan() {
-			break
-		}
-
-		choice := strings.TrimSpace(scanner.Text())
-
-		switch choice {
-		case "1":
-			fmt.Println("Создание задач")
-		case "2":
-			fmt.Println("Выполнение задачи")
-		case "3":
-			fmt.Println("Удаление задачи")
-		case "4":
-			fmt.Println("Вывод всех задач")
-		case "5":
-			return
-		default:
-			fmt.Println("Неверный ввод. Введите число от 1 до 5.")
-		}
-	}
-}
-
-func main() {
-	menu()
 }
