@@ -120,7 +120,7 @@ func runMenu(scanner *bufio.Scanner) {
 
 		case "5":
 			fmt.Println("Программа завершена.")
-			return
+			os.Exit(0)
 
 		default:
 			fmt.Println("Неверный ввод. Введите число от 1 до 5.")
@@ -149,18 +149,16 @@ func printTasks(tasksList []Task) {
 	fmt.Println("+----+----------------------+-------------+")
 
 	for _, task := range tasksList {
-		// Преобразуем в срез рун для корректной работы с русскими буквами
-		runes := []rune(task.Title)
+		// Проверка на длину нащвания и ограничение на длину
 		displayTitle := task.Title
 
 		// Ограничиваем длину заголовка до 20 видимых символов
-		if len(runes) > 20 {
-			displayTitle = string(runes[:17]) + "..."
-			runes = []rune(displayTitle)
+		if len(displayTitle) > 20 {
+			displayTitle = string(displayTitle[:17]) + "..."
 		}
 
 		// Вычисляем, сколько пробелов нужно добавить для выравнивания (всего 20 мест)
-		spacesCount := 20 - len(runes)
+		spacesCount := 20 - len(displayTitle)
 		spaces := ""
 		if spacesCount > 0 {
 			spaces = strings.Repeat(" ", spacesCount)
