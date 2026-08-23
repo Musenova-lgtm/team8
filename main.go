@@ -34,19 +34,18 @@ func main() {
 }
 
 func printHelp() {
-	fmt.Println("Interactive Kanban CLI")
+	fmt.Println("Kanban CLI — консольный менеджер задач в интерактивном режиме.")
 	fmt.Println()
-	fmt.Println("Использование: go run main.go [флаг]")
+	fmt.Println("Использование:")
+	fmt.Println("  go run main.go         Запуск интерактивного меню")
+	fmt.Println("  go run main.go --help  Показать эту справку")
 	fmt.Println()
-	fmt.Println("Флаги:")
-	fmt.Println("  -h, --h, --help   Показать эту справку и выйти")
-	fmt.Println()
-	fmt.Println("Без флагов запускается интерактивное меню:")
-	fmt.Println("  1. Создать таску")
-	fmt.Println("  2. Пометить выполненным")
-	fmt.Println("  3. Удалить таску")
-	fmt.Println("  4. Все таски")
-	fmt.Println("  5. Завершить работу программы")
+	fmt.Println("Доступные команды в меню:")
+	fmt.Println("  1. Создать таску          — запрашивает название и добавляет новую задачу (TODO)")
+	fmt.Println("  2. Пометить выполненным   — переводит задачу по ID в статус DONE")
+	fmt.Println("  3. Удалить таску          — удаляет задачу из списка по ID")
+	fmt.Println("  4. Все таски              — выводит текущую доску задач в виде ASCII-таблицы")
+	fmt.Println("  5. Завершить работу       — сохраняет состояние и закрывает программу")
 }
 
 func menu() {
