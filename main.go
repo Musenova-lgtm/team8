@@ -21,6 +21,9 @@ func main() {
 		if arg == "-h" || arg == "--h" || arg == "--help" {
 			printHelp()
 			return
+		} else {
+			fmt.Println("Неизвестный аргумент. Используйте --help для справки.")
+			os.Exit(1)
 		}
 	}
 
