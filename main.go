@@ -149,16 +149,18 @@ func printTasks(tasksList []Task) {
 	fmt.Println("+----+----------------------+-------------+")
 
 	for _, task := range tasksList {
-		// Проверка на длину нащвания и ограничение на длину
+		// Преобразуем в срез рун для корректной работы с русскими буквами
+		runes := []rune(task.Title)
 		displayTitle := task.Title
 
 		// Ограничиваем длину заголовка до 20 видимых символов
-		if len(displayTitle) > 20 {
-			displayTitle = string(displayTitle[:17]) + "..."
+		if len(runes) > 20 {
+			displayTitle = string(runes[:17]) + "..."
+			runes = []rune(displayTitle)
 		}
 
 		// Вычисляем, сколько пробелов нужно добавить для выравнивания (всего 20 мест)
-		spacesCount := 20 - len(displayTitle)
+		spacesCount := 20 - len(runes)
 		spaces := ""
 		if spacesCount > 0 {
 			spaces = strings.Repeat(" ", spacesCount)
