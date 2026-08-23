@@ -18,9 +18,13 @@ var tasks []Task
 
 func main() {
 	for _, arg := range os.Args[1:] {
-		if arg == "-h" || arg == "--h" || arg == "--help" {
+		switch arg {
+		case "-h", "--h", "--help":
 			printHelp()
 			return
+		default:
+			fmt.Println("Неизвестный аргумент. Используйте --help для справки.")
+			os.Exit(1)
 		}
 	}
 
