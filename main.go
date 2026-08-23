@@ -21,7 +21,6 @@ func main() {
 		switch arg {
 		case "-h", "--h", "--help":
 			printHelp()
-			return
 		default:
 			fmt.Println("Неизвестный аргумент. Используйте --help для справки.")
 			os.Exit(1)
